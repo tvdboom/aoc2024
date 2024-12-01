@@ -11,7 +11,6 @@ target/
 
 
 # Added by cargo
-
 /target
 
 # Advent of Code
@@ -26,5 +25,7 @@ data/puzzles/*
 dhat-heap.json
 
 # Benchmarks
-
 data/timings.json
+
+# JetBrains
+.idea/
