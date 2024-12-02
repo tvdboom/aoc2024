@@ -27,5 +27,6 @@ dhat-heap.json
 # Benchmarks
 data/timings.json
 
-# JetBrains
+# IDEs
 .idea/
+.vscode/

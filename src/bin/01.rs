@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 advent_of_code::solution!(1);
 
 pub fn parse_data(input: &str) -> (Vec<i32>, Vec<i32>) {
@@ -19,10 +21,7 @@ pub fn part_one(input: &str) -> Option<i32> {
     v1.sort_unstable();
     v2.sort_unstable();
 
-    let result = v1.iter()
-        .zip(v2.iter())
-        .map(|(a, b)| (a - b).abs())
-        .sum();
+    let result = v1.iter().zip(v2.iter()).map(|(a, b)| (a - b).abs()).sum();
 
     Some(result)
 }
@@ -30,8 +29,14 @@ pub fn part_one(input: &str) -> Option<i32> {
 pub fn part_two(input: &str) -> Option<i32> {
     let (v1, v2): (Vec<i32>, Vec<i32>) = parse_data(input);
 
-    let result = v1.iter()
-        .map(|&n| n * v2.iter().filter(|&&x| x == n).count() as i32)
+    let counts = v2.iter().copied().fold(HashMap::new(), |mut map, x| {
+        *map.entry(x).or_insert(0) += 1;
+        map
+    });
+
+    let result = v1
+        .iter()
+        .map(|&n| n * *counts.get(&n).unwrap_or(&0) as i32)
         .sum();
 
     Some(result)
