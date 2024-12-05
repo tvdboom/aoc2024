@@ -2,11 +2,11 @@ advent_of_code::solution!(3);
 
 use regex::{Regex, RegexBuilder};
 
-
 pub fn part_one(input: &str) -> Option<u32> {
     let re = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap();
 
-    let result = re.captures_iter(input)
+    let result = re
+        .captures_iter(input)
         .map(|x| x[1].parse::<u32>().unwrap() * x[2].parse::<u32>().unwrap())
         .sum();
 
@@ -21,7 +21,8 @@ pub fn part_two(input: &str) -> Option<u32> {
         .unwrap();
 
     // Filter out if no first digit group (don't followed by do)
-    let result = re.captures_iter(input)
+    let result = re
+        .captures_iter(input)
         .filter(|x| x.get(1).is_some())
         .map(|x| x[1].parse::<u32>().unwrap() * x[2].parse::<u32>().unwrap())
         .sum();
