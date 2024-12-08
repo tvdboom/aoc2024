@@ -1,8 +1,8 @@
 advent_of_code::solution!(6);
 
+use rayon::prelude::*;
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
-use rayon::prelude::*;
 
 pub fn read_data(input: &str) -> Vec<Vec<char>> {
     input.lines().map(|l| l.chars().collect()).collect()
@@ -117,16 +117,15 @@ pub fn part_two(input: &str) -> Option<usize> {
     let path = resolve(&matrix, d, pos, direction).unwrap();
 
     let mut blocks = Arc::new(Mutex::new(HashSet::new()));
-    path.par_iter()
-        .for_each(|x| {
-            if x.0 != pos {
-                let mut new_map = matrix.clone();
-                new_map[x.0.0][x.0.1] = '#';
-                if resolve(&new_map, d, pos, direction).is_none() {
-                    blocks.lock().unwrap().insert(x.0);
-                }
+    path.par_iter().for_each(|x| {
+        if x.0 != pos {
+            let mut new_map = matrix.clone();
+            new_map[x.0 .0][x.0 .1] = '#';
+            if resolve(&new_map, d, pos, direction).is_none() {
+                blocks.lock().unwrap().insert(x.0);
             }
-        });
+        }
+    });
 
     let result = blocks.lock().unwrap().len();
 
