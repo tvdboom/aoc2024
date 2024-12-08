@@ -1,7 +1,8 @@
 advent_of_code::solution!(6);
 
 use std::collections::HashSet;
-
+use std::sync::{Arc, Mutex};
+use rayon::prelude::*;
 
 pub fn read_data(input: &str) -> Vec<Vec<char>> {
     input.lines().map(|l| l.chars().collect()).collect()
@@ -29,7 +30,6 @@ pub fn resolve(
                 }
                 if matrix[pos.0 - 1][pos.1] == '#' {
                     direction = '>';
-                    pos.1 += 1;
                 } else {
                     pos.0 -= 1;
                 }
@@ -40,7 +40,6 @@ pub fn resolve(
                 }
                 if matrix[pos.0 + 1][pos.1] == '#' {
                     direction = '<';
-                    pos.1 -= 1;
                 } else {
                     pos.0 += 1;
                 }
@@ -51,7 +50,6 @@ pub fn resolve(
                 }
                 if matrix[pos.0][pos.1 - 1] == '#' {
                     direction = '^';
-                    pos.0 -= 1;
                 } else {
                     pos.1 -= 1;
                 }
@@ -62,7 +60,6 @@ pub fn resolve(
                 }
                 if matrix[pos.0][pos.1 + 1] == '#' {
                     direction = 'v';
-                    pos.0 += 1;
                 } else {
                     pos.1 += 1;
                 }
@@ -119,19 +116,21 @@ pub fn part_two(input: &str) -> Option<usize> {
 
     let path = resolve(&matrix, d, pos, direction).unwrap();
 
-    let mut blocks: HashSet<(usize, usize)> = HashSet::new();
-    path.iter()
+    let mut blocks = Arc::new(Mutex::new(HashSet::new()));
+    path.par_iter()
         .for_each(|x| {
             if x.0 != pos {
                 let mut new_map = matrix.clone();
                 new_map[x.0.0][x.0.1] = '#';
-                if !blocks.contains(&x.0) && resolve(&new_map, d, pos, direction).is_none() {
-                    blocks.insert(x.0);
+                if resolve(&new_map, d, pos, direction).is_none() {
+                    blocks.lock().unwrap().insert(x.0);
                 }
             }
         });
 
-    Some(blocks.len())
+    let result = blocks.lock().unwrap().len();
+
+    Some(result)
 }
 
 #[cfg(test)]
