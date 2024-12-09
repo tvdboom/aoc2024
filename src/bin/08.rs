@@ -5,25 +5,23 @@ advent_of_code::solution!(8);
 pub fn read_data(input: &str) -> HashMap<char, Vec<(isize, isize)>> {
     let mut antennas: HashMap<char, Vec<(isize, isize)>> = HashMap::new();
 
-    input.lines()
-        .enumerate()
-        .for_each(|(i, l)| {
-            l.chars()
-                .enumerate()
-                .for_each(|(j, c)| {
-                    if c != '.' {
-                        antennas.entry(c).or_default().push((i as isize, j as isize));
-                    }
-                });
+    input.lines().enumerate().for_each(|(i, l)| {
+        l.chars().enumerate().for_each(|(j, c)| {
+            if c != '.' {
+                antennas
+                    .entry(c)
+                    .or_default()
+                    .push((i as isize, j as isize));
+            }
         });
+    });
 
     antennas
 }
 
-
 pub fn part_one(input: &str) -> Option<usize> {
     let antennas = read_data(input);
-    let d  = input.lines().count() as isize;
+    let d = input.lines().count() as isize;
     let mut antinodes: HashSet<(isize, isize)> = HashSet::new();
 
     antennas.iter().for_each(|(_, v)| {
@@ -49,7 +47,7 @@ pub fn part_one(input: &str) -> Option<usize> {
 
 pub fn part_two(input: &str) -> Option<usize> {
     let antennas = read_data(input);
-    let d  = input.lines().count() as isize;
+    let d = input.lines().count() as isize;
     let mut antinodes: HashSet<(isize, isize)> = HashSet::new();
 
     antennas.iter().for_each(|(_, v)| {

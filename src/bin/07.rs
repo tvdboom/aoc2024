@@ -55,7 +55,7 @@ pub fn part_one(input: &str) -> Option<usize> {
 
     let result = data
         .into_par_iter()
-        .filter_map(|(r, numbers)| is_valid(r, &numbers,false))
+        .filter_map(|(r, numbers)| is_valid(r, &numbers, false))
         .sum();
 
     Some(result)
