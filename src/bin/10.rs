@@ -21,7 +21,12 @@ pub fn traverse(i: usize, j: usize, data: &Vec<Vec<u8>>, count: &mut DashSet<(us
         let ii = i as isize + dx;
         let jj = j as isize + dy;
         let d = data.len() as isize;
-        if ii >= 0 && ii < d && jj >= 0 && jj < d && data[ii as usize][jj as usize] == data[i][j] + 1 {
+        if ii >= 0
+            && ii < d
+            && jj >= 0
+            && jj < d
+            && data[ii as usize][jj as usize] == data[i][j] + 1
+        {
             traverse(ii as usize, jj as usize, data, count);
         }
     }
@@ -36,7 +41,12 @@ pub fn traverse2(i: usize, j: usize, data: &Vec<Vec<u8>>, count: &AtomicUsize) {
         let ii = i as isize + dx;
         let jj = j as isize + dy;
         let d = data.len() as isize;
-        if ii >= 0 && ii < d && jj >= 0 && jj < d && data[ii as usize][jj as usize] == data[i][j] + 1 {
+        if ii >= 0
+            && ii < d
+            && jj >= 0
+            && jj < d
+            && data[ii as usize][jj as usize] == data[i][j] + 1
+        {
             traverse2(ii as usize, jj as usize, data, count);
         }
     }
@@ -50,7 +60,7 @@ pub fn part_one(input: &str) -> Option<usize> {
     data.par_iter().enumerate().for_each(|(i, col)| {
         col.par_iter().enumerate().for_each(|(j, _)| {
             if data[i][j] == 0 {
-                let mut count: DashSet<(usize, usize)> = DashSet::new();
+                let mut count: DashSet<(usize, usize)> = DashSet::with_capacity(1024);
                 traverse(i, j, &data, &mut count);
                 result.fetch_add(count.len(), Ordering::Relaxed);
             }
