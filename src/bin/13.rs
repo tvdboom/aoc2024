@@ -11,10 +11,12 @@ pub struct Machine {
 
 pub fn read_data(input: &str) -> Vec<Machine> {
     let re = Regex::new(
-        r"Button A: X\+(\d+), Y\+(\d+)\s+Button B: X\+(\d+), Y\+(\d+)\s+Prize: X=(\d+), Y=(\d+)"
-    ).unwrap();
+        r"Button A: X\+(\d+), Y\+(\d+)\s+Button B: X\+(\d+), Y\+(\d+)\s+Prize: X=(\d+), Y=(\d+)",
+    )
+    .unwrap();
 
-    input.trim()
+    input
+        .trim()
         .split("\n\n")
         .filter_map(|block| {
             if let Some(caps) = re.captures(block) {
@@ -51,7 +53,10 @@ pub fn part_two(input: &str) -> Option<isize> {
 
     let mut result = 0;
     for mut m in machines {
-        m.prize = (m.prize.0 + 10_000_000_000_000, m.prize.1 + 10_000_000_000_000);
+        m.prize = (
+            m.prize.0 + 10_000_000_000_000,
+            m.prize.1 + 10_000_000_000_000,
+        );
 
         let numerator1 = m.prize.1 * m.b.0 - m.prize.0 * m.b.1;
         let numerator2 = m.prize.1 * m.a.0 - m.prize.0 * m.a.1;

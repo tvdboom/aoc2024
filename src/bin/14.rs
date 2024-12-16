@@ -1,5 +1,5 @@
-use std::collections::{HashMap, HashSet};
 use regex::Regex;
+use std::collections::{HashMap, HashSet};
 
 advent_of_code::solution!(14);
 
@@ -28,7 +28,7 @@ pub fn part_one(input: &str) -> Option<usize> {
 
     let (height, width) = (103, 101);
     let sec = 100;
-    
+
     let mut quadrants = [0; 4];
     for r in &mut robots {
         // https://doc.rust-lang.org/std/primitive.isize.html#method.rem_euclid
@@ -62,11 +62,14 @@ pub fn part_two(input: &str) -> Option<isize> {
 
         let mut positions: HashMap<isize, HashSet<isize>> = HashMap::new();
         for r in &mut robots {
-            let pos =(
+            let pos = (
                 (r.pos.0 + r.v.0 * sec).rem_euclid(width),
                 (r.pos.1 + r.v.1 * sec).rem_euclid(height),
             );
-            positions.entry(pos.0).or_insert_with(HashSet::new).insert(pos.1);
+            positions
+                .entry(pos.0)
+                .or_insert_with(HashSet::new)
+                .insert(pos.1);
         }
 
         // Check if there are at least 30 consecutive robots in the same row
