@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet,VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 
 advent_of_code::solution!(15);
 
@@ -25,27 +25,25 @@ pub fn read_data2(input: &str) -> (HashMap<(isize, isize), char>, (isize, isize)
     let mut pos: (isize, isize) = (0, 0);
     let mut map: HashMap<(isize, isize), char> = HashMap::new();
     grid.lines().enumerate().for_each(|(i, l)| {
-        l.chars().enumerate().for_each(|(j, c)| {
-            match c {
-                '#' => {
-                    map.insert((i as isize, 2 * j as isize), '#');
-                    map.insert((i as isize, (2 * j + 1) as isize), '#');
-                }
-                'O' => {
-                    map.insert((i as isize, 2 * j as isize), '[');
-                    map.insert((i as isize, (2 * j + 1) as isize), ']');
-                }
-                '.' => {
-                    map.insert((i as isize, 2 * j as isize), '.');
-                    map.insert((i as isize, (2 * j + 1) as isize), '.');
-                }
-                '@' => {
-                    pos = (i as isize, 2 * j as isize);
-                    map.insert((i as isize, 2 * j as isize), '@');
-                    map.insert((i as isize, (2 * j + 1) as isize), '.');
-                }
-                _ => panic!("Invalid character"),
+        l.chars().enumerate().for_each(|(j, c)| match c {
+            '#' => {
+                map.insert((i as isize, 2 * j as isize), '#');
+                map.insert((i as isize, (2 * j + 1) as isize), '#');
             }
+            'O' => {
+                map.insert((i as isize, 2 * j as isize), '[');
+                map.insert((i as isize, (2 * j + 1) as isize), ']');
+            }
+            '.' => {
+                map.insert((i as isize, 2 * j as isize), '.');
+                map.insert((i as isize, (2 * j + 1) as isize), '.');
+            }
+            '@' => {
+                pos = (i as isize, 2 * j as isize);
+                map.insert((i as isize, 2 * j as isize), '@');
+                map.insert((i as isize, (2 * j + 1) as isize), '.');
+            }
+            _ => panic!("Invalid character"),
         })
     });
 
@@ -83,7 +81,7 @@ pub fn part_one(input: &str) -> Option<isize> {
     let (mut map, mut pos, movements) = read_data(input);
 
     for c in movements.chars() {
-       let d: (isize, isize) = match c {
+        let d: (isize, isize) = match c {
             '^' => (-1, 0),
             '>' => (0, 1),
             'v' => (1, 0),
@@ -130,7 +128,6 @@ pub fn part_one(input: &str) -> Option<isize> {
 
     Some(result)
 }
-
 
 pub fn part_two(input: &str) -> Option<isize> {
     let (mut map, mut pos, movements) = read_data2(input);
