@@ -37,12 +37,12 @@ fn traverse(d: isize, map: &mut HashSet<(isize, isize)>) -> Option<usize> {
         }
     }
 
-    None  // No possible path!
+    None // No possible path!
 }
 
 pub fn part_one(input: &str) -> Option<usize> {
     let mut map = read_data(input, 1024);
-    Some(traverse(71, &mut map)?)
+    traverse(71, &mut map)
 }
 
 pub fn part_two(input: &str) -> Option<String> {

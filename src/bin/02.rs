@@ -11,7 +11,7 @@ pub fn parse_data(input: &str) -> Vec<Vec<i32>> {
         .collect()
 }
 
-pub fn is_valid(x: &Vec<i32>) -> bool {
+pub fn is_valid(x: &[i32]) -> bool {
     let increasing = x[1] > x[0];
     x.windows(2).all(|w| {
         let diff = w[1] - w[0];

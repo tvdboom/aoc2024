@@ -9,7 +9,7 @@ pub fn read_data(input: &str) -> Vec<Vec<char>> {
 }
 
 pub fn resolve(
-    matrix: &Vec<Vec<char>>,
+    matrix: &[Vec<char>],
     d: usize,
     mut pos: (usize, usize),
     mut direction: char,
@@ -116,7 +116,7 @@ pub fn part_two(input: &str) -> Option<usize> {
 
     let path = resolve(&matrix, d, pos, direction).unwrap();
 
-    let mut blocks = Arc::new(Mutex::new(HashSet::new()));
+    let blocks = Arc::new(Mutex::new(HashSet::new()));
     path.par_iter().for_each(|x| {
         if x.0 != pos {
             let mut new_map = matrix.clone();

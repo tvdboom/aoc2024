@@ -91,8 +91,7 @@ pub fn part_two(input: &str) -> Option<usize> {
 
         for res in result {
             for n in 0..=7 {
-                // Every value in the output only changes after every power of 8
-                // First number changes every 1, second every 8, third every 64, etc...
+                // Every value in the output only depends on 3 bits in A
                 // So we can convert A to the target times 8 plus the nth position (shift 3 bits)
                 let a = 8 * res + n;
                 let mut computer = Computer {
@@ -104,7 +103,7 @@ pub fn part_two(input: &str) -> Option<usize> {
                 };
 
                 match computer.do_operation() {
-                    // If the result matches the last digit of the target, add it to the list
+                    // If the result matches the digit of the target, add it to the list
                     Some(r) if r == *operand => result2.push(a),
                     _ => (),
                 }
