@@ -1,6 +1,6 @@
 use rayon::iter::ParallelIterator;
 use rayon::prelude::IntoParallelRefIterator;
-use std::collections::{HashMap, VecDeque};
+use std::collections::HashMap;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 advent_of_code::solution!(20);
@@ -31,41 +31,26 @@ pub fn read_data(
     (map, start, end)
 }
 
-pub struct Loc {
-    pos: (isize, isize),
-    d: usize,
-}
-
 const DIRECTIONS: [(isize, isize); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
 fn calculate_dist(
     map: &HashMap<(isize, isize), char>,
-    position: &(isize, isize),
-) -> HashMap<(isize, isize), usize> {
-    let mut cache: HashMap<(isize, isize), usize> = HashMap::new();
-    let mut queue: VecDeque<Loc> = VecDeque::new();
-    queue.push_back(Loc {
-        pos: *position,
-        d: 0,
-    });
-
-    while let Some(loc) = queue.pop_front() {
-        if cache.get(&loc.pos).unwrap_or(&usize::MAX) <= &loc.d {
-            continue;
-        }
-
-        cache.insert(loc.pos, loc.d);
+    start: &(isize, isize),
+    end: &(isize, isize),
+) -> HashMap<(isize, isize), isize> {
+    let mut cache: HashMap<(isize, isize), isize> = HashMap::from([(*start, 0)]);
+    
+    let mut loc = *start;
+    while loc != *end {
         for &dir in DIRECTIONS.iter() {
-            let new_pos = (loc.pos.0 + dir.0, loc.pos.1 + dir.1);
-            if map[&new_pos] == '.' && cache.get(&new_pos).unwrap_or(&usize::MAX) > &(loc.d + 1) {
-                queue.push_back(Loc {
-                    pos: new_pos,
-                    d: loc.d + 1,
-                });
+            let new_pos = (loc.0 + dir.0, loc.1 + dir.1);
+            if !cache.contains_key(&new_pos) && map[&new_pos] == '.' {
+                cache.insert(new_pos, cache.get(&loc).unwrap() + 1);
+                loc = new_pos;
             }
         }
     }
-
+    
     cache
 }
 
@@ -75,35 +60,32 @@ pub fn traverse(
     end: &(isize, isize),
     cheat: isize,
 ) -> usize {
-    let cache_start = calculate_dist(map, start);
-    let cache_end = calculate_dist(map, end);
+    let distances = calculate_dist(map, start, end);
 
-    let min_d = cache_end.get(start).unwrap();
-
-    let result = AtomicUsize::new(0);
-    cache_start.par_iter().for_each(|(pos, steps)| {
+    let mut result = 0;
+    // let result = AtomicUsize::new(0);
+    distances.iter().for_each(|(pos, d)| {
         for dy in -cheat..=cheat {
             let rest = cheat - dy.abs();
             for dx in -rest..=rest {
                 let new_pos = (pos.0 + dy, pos.1 + dx);
-                match map.get(&new_pos) {
-                    Some('.') if cache_end.contains_key(&new_pos) => {
-                        let new_d = steps
-                            + dy.unsigned_abs()
-                            + dx.unsigned_abs()
-                            + cache_end.get(&new_pos).unwrap();
+                if distances.contains_key(&new_pos) {
+                    let gain = distances.get(&new_pos).unwrap()
+                        - dy.abs()
+                        - dx.abs()
+                        - d;
 
-                        if min_d >= &(100 + new_d) {
-                            result.fetch_add(1, Ordering::Relaxed);
-                        }
+                    if gain >= 100 {
+                        result += 1;
+                        // result.fetch_add(1, Ordering::Relaxed);
                     }
-                    _ => continue,
                 }
             }
         }
     });
 
-    result.into_inner()
+    result
+    // result.into_inner()
 }
 
 pub fn part_one(input: &str) -> Option<usize> {
