@@ -58,7 +58,7 @@ pub fn part_one(input: &str) -> Option<usize> {
 
 pub fn part_two(input: &str) -> Option<usize> {
     let (patterns, towels) = read_data(input);
-    
+
     let cache: DashMap<&str, usize> = DashMap::new();
     Some(
         towels

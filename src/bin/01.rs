@@ -34,10 +34,7 @@ pub fn part_two(input: &str) -> Option<i32> {
         map
     });
 
-    let result = v1
-        .iter()
-        .map(|&n| n * *counts.get(&n).unwrap_or(&0))
-        .sum();
+    let result = v1.iter().map(|&n| n * *counts.get(&n).unwrap_or(&0)).sum();
 
     Some(result)
 }
